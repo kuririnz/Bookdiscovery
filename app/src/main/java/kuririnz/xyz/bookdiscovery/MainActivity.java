@@ -1,5 +1,6 @@
 package kuririnz.xyz.bookdiscovery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext()
                         , "入力された文字は [" + bookSearchEditor.getText().toString() + "]です。"
                         , Toast.LENGTH_LONG).show();
+                // 画面遷移するためのIntentをインスタンス化
+                Intent intent = new Intent(MainActivity.this, ResultListActivity.class);
+                // 画面遷移アクションを実行
+                startActivity(intent);
             }
         };
         // 蔵書検索ボタンが押された時に実行するプログラムをボタンに登録
