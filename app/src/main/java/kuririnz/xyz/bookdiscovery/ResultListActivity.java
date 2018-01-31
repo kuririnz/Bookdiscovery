@@ -19,6 +19,8 @@ public class ResultListActivity extends AppCompatActivity {
     ListView resultListView;
     // 検証用コレクションデータ
     List<String> listData = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+    // ListViewの表示内容を管理するクラス
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class ResultListActivity extends AppCompatActivity {
         // xmlファイルのコンポーネントと関連付け
         resultListView = findViewById(R.id.ResultListView);
         // ListViewに表示する情報をまとめるAdapterをインスタンス化
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(ResultListActivity.this
+        adapter = new ArrayAdapter<>(ResultListActivity.this
                 , android.R.layout.simple_list_item_1
                 , listData);
         // ListViewに表示情報をまとめたAdapterをセット
