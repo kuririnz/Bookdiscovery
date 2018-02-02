@@ -9,9 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ResultListActivity extends AppCompatActivity {
 
@@ -30,6 +37,8 @@ public class ResultListActivity extends AppCompatActivity {
             , "Firebase導入");
     // ListViewの表示内容を管理するクラス
     ResultListAdapter adapter;
+    // OkHttp通信クライアント
+    OkHttpClient okHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +64,26 @@ public class ResultListActivity extends AppCompatActivity {
         };
         // ListViewに行をクリックした時のイベントを登録
         resultListView.setOnItemClickListener(listItemClickEvent);
+
+        // OkHttp通信クライアントをインスタンス化
+        okHttpClient = new OkHttpClient();
+        // 通信するための情報
+        Request request = new Request.Builder().url("https://www.googleapis.com/books/v1/volumes?q=ほんきで学ぶAndroidアプリ開発入門").build();
+        // 非同期処理でAPI通信を実行
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 失敗した時の命令
+                // 通信に失敗した原因をログに出力
+                Log.e("failure API Response", e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 成功した時の命令
+                // Google Books APIから取得したデータをログに出力
+                Log.d("Success API Response", response.body().string());
+            }
+        });
     }
 }
