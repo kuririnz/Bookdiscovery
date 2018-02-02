@@ -9,6 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,8 +73,8 @@ public class ResultListActivity extends AppCompatActivity {
         okHttpClient = new OkHttpClient();
         // 通信するための情報
         Request request = new Request.Builder().url("https://www.googleapis.com/books/v1/volumes?q=ほんきで学ぶAndroidアプリ開発入門").build();
-        // 非同期処理でAPI通信を実行
-        okHttpClient.newCall(request).enqueue(new Callback() {
+        // データの取得後の命令を実装
+        Callback callBack = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 失敗した時の命令
@@ -82,8 +86,30 @@ public class ResultListActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 // 成功した時の命令
                 // Google Books APIから取得したデータをログに出力
-                Log.d("Success API Response", response.body().string());
+                // Jsonのパースが失敗してアプリの強制終了を回避する機能
+                try {
+                    // JsonデータをJSONObjectに変換
+                    JSONObject rootJson = new JSONObject(response.body().string());
+                    // Jsonデータから蔵書リストデータ"items"を取得
+                    JSONArray items = rootJson.getJSONArray("items");
+                    Log.d("Success API Response", "APIから取得したデータの件数:" +
+                            items.length());
+                    // 蔵書リストの件数分繰り返しタイトルをログ出力する
+                    for (int i = 0; i < items.length(); i ++) {
+                        // 蔵書リストから i番目のデータを取得
+                        JSONObject item = items.getJSONObject(i);
+                        // 蔵書のi番目データから蔵書情報のグループを取得
+                        JSONObject volumeInfo = item.getJSONObject("volumeInfo");
+                        // 繰り返しの番号と蔵書のタイトルをログに出力
+                        Log.d("Response Item Title", (i + 1) + "番目のデータタイトル：" + volumeInfo.get("title"));
+                    }
+                } catch (JSONException e) {
+                    // Jsonパースの時にエラーが発生したらログに出力する
+                    e.printStackTrace();
+                }
             }
-        });
+        };
+        // 非同期処理でAPI通信を実行
+        okHttpClient.newCall(request).enqueue(callBack);
     }
 }
