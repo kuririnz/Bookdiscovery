@@ -16,11 +16,13 @@ import java.util.List;
 public class ResultListAdapter extends BaseAdapter {
 
     // ListViewの描画に必要な変数を宣言
+    List<String> titleList;
     List<String> summaryList;
     LayoutInflater layoutInflater;
 
     // コンストラクタ(インスタンス時に呼び出されるメソッドのようなもの)
-    public ResultListAdapter(Context context, List<String> summaryList) {
+    public ResultListAdapter(Context context, List<String> titleList, List<String> summaryList) {
+        this.titleList = titleList;
         this.summaryList = summaryList;
         this.layoutInflater = LayoutInflater.from(context);
     }
@@ -28,7 +30,7 @@ public class ResultListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         // 一覧表示する要素数を返却する
-        return summaryList.size();
+        return titleList.size();
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ResultListAdapter extends BaseAdapter {
         TextView titleView = view.findViewById(R.id.RowListTitle);
         TextView summaryView = view.findViewById(R.id.RowListSummary);
 
-        titleView.setText((i + 1) + "ページ目");
+        titleView.setText(titleList.get(i));
         summaryView.setText(summaryList.get(i));
 
         // 文字情報を代入されたviewを返却
