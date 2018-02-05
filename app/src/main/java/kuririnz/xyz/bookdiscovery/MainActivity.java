@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 timer.cancel();
                 // 画面遷移するためのIntentをインスタンス化
                 Intent intent = new Intent(MainActivity.this, ResultListActivity.class);
+                // EditTextに入力された文字列を"KeyValuePair"でResultListActivityに渡す
+                intent.putExtra("terms", bookSearchEditor.getText().toString());
                 // 画面遷移アクションを実行
                 startActivity(intent);
             }

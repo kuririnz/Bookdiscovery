@@ -1,5 +1,6 @@
 package kuririnz.xyz.bookdiscovery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,8 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
     OkHttpClient okHttpClient;
     // メインスレッドに戻ってくるためのHandler
     Handler handler;
+    // MainActivityから渡されたデータを保持する
+    String term;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +45,22 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
 
         // Handlerをインスタンス化
         handler = new Handler();
+        // 画面遷移時のデータが空でない場合
+        if (getIntent().hasExtra("terms")) {
+            // Key:termsにデータがあればValueを代入
+            term = getIntent().getStringExtra("terms");
+        } else {
+            // 画面遷移時のデータがからの場合は "Android"と文字列を代入
+            term = "Android";
+        }
+
         // xmlファイルのコンポーネントと関連付け
         resultListView = findViewById(R.id.ResultListView);
-
         // OkHttp通信クライアントをインスタンス化
         okHttpClient = new OkHttpClient();
         // 通信するための情報
-        Request request = new Request.Builder().url("https://www.googleapis.com/books/v1/volumes?q=ほんきで学ぶAndroidアプリ開発入門").build();
+        // MainActivityで入力された文字列で検索する様修正
+        Request request = new Request.Builder().url("https://www.googleapis.com/books/v1/volumes?q=" + term).build();
         // データの取得後の命令を実装
         Callback callBack = new Callback() {
             @Override
