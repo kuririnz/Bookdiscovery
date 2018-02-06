@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     // レイアウトxmlと関連付けるWidget
     Button bookSearchBtn;
+    Button historyBtn;
     EditText bookSearchEditor;
     // Timerクラス
     Timer timer;
@@ -32,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
         // 蔵書検索ボタンをjavaプログラムで操作できるように名前をつける
         bookSearchBtn = findViewById(R.id.BookSearchBtn);
+        // 検索履歴ボタンを関連付ける
+        historyBtn = findViewById(R.id.HistoryBtn);
         // 蔵書検索する文字を入力するEditTextをjavaプログラムで操作できるように名前をつける
         bookSearchEditor = findViewById(R.id.BookSearchEdit);
-        // 蔵書検索ボタンが押された時の処理を実装
+        // 蔵書検索ボタンをクリックした時の処理を実装
         View.OnClickListener bookSearchEvent = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         , Toast.LENGTH_LONG).show();
                 // Timerスレッドを止める
                 timer.cancel();
-                // 画面遷移するためのIntentをインスタンス化
+                // 検索結果画面へ遷移するためのIntentをインスタンス化
                 Intent intent = new Intent(MainActivity.this, ResultListActivity.class);
                 // EditTextに入力された文字列を"KeyValuePair"でResultListActivityに渡す
                 intent.putExtra("terms", bookSearchEditor.getText().toString());
@@ -56,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
         };
         // 蔵書検索ボタンが押された時に実行するプログラムをボタンに登録
         bookSearchBtn.setOnClickListener(bookSearchEvent);
+
+        // 検索履歴ボタンをクリックした時の処理を実装
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 検索履歴画面へ遷移するためのIntentをインスタンス化
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                // 画面遷移アクションを実行
+                startActivity(intent);
+
+            }
+        });
 
         // 準備されているTimerスレッドをインスタンス化
         timer = new Timer();
