@@ -16,9 +16,9 @@ import java.util.List;
 public class ResultListAdapter extends BaseAdapter {
 
     // ListViewの描画に必要な変数を宣言
-    List<String> titleList;
-    List<String> summaryList;
-    LayoutInflater layoutInflater;
+    private List<String> titleList;
+    private List<String> summaryList;
+    private LayoutInflater layoutInflater;
 
     // コンストラクタ(インスタンス時に呼び出されるメソッドのようなもの)
     public ResultListAdapter(Context context, List<String> titleList, List<String> summaryList) {

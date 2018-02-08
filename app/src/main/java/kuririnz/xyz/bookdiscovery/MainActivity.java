@@ -10,19 +10,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
     // レイアウトxmlと関連付けるWidget
-    Button bookSearchBtn;
-    Button historyBtn;
-    EditText bookSearchEditor;
+    private Button bookSearchBtn;
+    private Button historyBtn;
+    private EditText bookSearchEditor;
     // Timerクラス
-    Timer timer;
+    private Timer timer;
     // メインスレッドに帰って来るためのハンドラー
-    Handler handler;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +47,36 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // コンソールログにボタンが押されたことを出力(表示)
                 Log.d("BookSearchBtn", "onClick: BookSearch Button");
-                // 入力された文字をToast(トースト)に表示
-                Toast.makeText(getBaseContext()
-                        , "入力された文字は [" + bookSearchEditor.getText().toString() + "]です。"
-                        , Toast.LENGTH_LONG).show();
+                // EditTextの文字列を取得
+                String termString = bookSearchEditor.getText().toString();
                 // Timerスレッドを止める
                 timer.cancel();
+                // Realmインスタンスを生成
+                Realm realm = Realm.getDefaultInstance();
+                try {
+                    // 検索履歴テーブルへのアクセスを開始
+                    realm.beginTransaction();
+                    // 新規検索履歴データを作成
+                    SearchHistoryModel history = realm.createObject(SearchHistoryModel.class);
+                    // 検索文字列カラムにデータを登録
+                    history.setSearchTerm(termString);
+                    // 現在時刻を文字列で取得する
+                    Date now = new Date();
+                    // 現在時刻を定まった形式で文字列に変換
+                    String dateStr = new SimpleDateFormat("yyyy/MM/dd HH:mm").format(now);
+                    // 現在日時の文字列をカラムデータに登録
+                    history.setSearchDate(dateStr);
+                    // 検索履歴テーブルへのアクセスを終了
+                    realm.commitTransaction();
+                } finally {
+                    // Realmインスタンスがちゃんとクローズされること
+                    realm.close();
+                }
+
                 // 検索結果画面へ遷移するためのIntentをインスタンス化
                 Intent intent = new Intent(MainActivity.this, ResultListActivity.class);
                 // EditTextに入力された文字列を"KeyValuePair"でResultListActivityに渡す
-                intent.putExtra("terms", bookSearchEditor.getText().toString());
+                intent.putExtra("terms", termString);
                 // 画面遷移アクションを実行
                 startActivity(intent);
             }
@@ -68,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                 // 画面遷移アクションを実行
                 startActivity(intent);
-
             }
         });
 

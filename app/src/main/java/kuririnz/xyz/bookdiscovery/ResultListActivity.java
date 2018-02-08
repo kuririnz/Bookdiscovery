@@ -1,6 +1,5 @@
 package kuririnz.xyz.bookdiscovery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -28,15 +26,15 @@ import okhttp3.Response;
 public class ResultListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     // xmlファイルのコンポーネントと関連付ける要素
-    ListView resultListView;
+    private ListView resultListView;
     // ListViewの表示内容を管理するクラス
-    ResultListAdapter adapter;
+    private ResultListAdapter adapter;
     // OkHttp通信クライアント
-    OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
     // メインスレッドに戻ってくるためのHandler
-    Handler handler;
+    private Handler handler;
     // MainActivityから渡されたデータを保持する
-    String term;
+    private String term;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +104,11 @@ public class ResultListActivity extends AppCompatActivity implements AdapterView
     }
 
     // 検索結果をListViewに反映するメインスレッドの処理クラス
-    class ReflectResult implements Runnable {
+    private class ReflectResult implements Runnable {
         // 蔵書一覧タイトルデータリスト
-        List<String> titleList;
+        private List<String> titleList;
         // 蔵書一覧概要データリスト
-        List<String> summaryList;
+        private List<String> summaryList;
 
         // コンストラクタ
         public ReflectResult(JSONArray items) {
