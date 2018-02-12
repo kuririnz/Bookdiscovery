@@ -1,10 +1,9 @@
 package kuririnz.xyz.bookdiscovery;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
 
 public class ResultListActivity extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class ResultListActivity extends AppCompatActivity {
         // FragmentContainerにResultListFragmentを表示させる処理
         ResultListFragment resultListFragment = ResultListFragment.getInstance(term);
         // Activity内で表示するFragmentを管理するクラスをインスタンス化
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         // Fragmentを表示、または別のFragmentに遷移するためのクラスをインスタンス化
         FragmentTransaction ft = fm.beginTransaction();
         // FragmentManagerに新しいFragmentを追加
