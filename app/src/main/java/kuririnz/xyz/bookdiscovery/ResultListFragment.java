@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +138,18 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
         Toast.makeText(getContext()
                 , (i + 1) + "行目をクリックしました"
                 , Toast.LENGTH_SHORT).show();
+        // 蔵書詳細画面用Fragmentをインスタンス化
+        DetailFragment detailFragment = new DetailFragment();
+        // support.v4.app.Fragment内ではgetFragmentManager = Activity.getSupportFragmentManager
+        FragmentManager fm = getFragmentManager();
+        // 別のFragmentに遷移するためのクラスをインスタンス化
+        FragmentTransaction ft = fm.beginTransaction();
+        // Fragmentを表示させるViewのidとFragmentクラスを設定
+        ft.replace(R.id.FragmentContainer, detailFragment);
+        // 表示していたFragmentをバックスタックに追加
+        ft.addToBackStack(null);
+        // FragmentManagerに反映
+        ft.commit();
     }
 
     // 検索結果をListViewに反映するメインスレッドの処理クラス
