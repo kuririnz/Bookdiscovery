@@ -46,7 +46,7 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
     // MainActivityから渡されたデータを保持する
     private String term;
 
-    // ファクトリーコンストラクタ
+    // スタティックコンストラクタ
     public static ResultListFragment getInstance(String term) {
         // ResultListFragmentインスタンスを生成
         ResultListFragment fragment = new ResultListFragment();
