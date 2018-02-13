@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class DetailFragment extends Fragment {
     private TextView descriptText;
     private TextView pageText;
     private TextView publishDateText;
+    private ImageView detailImage;
     // 個体リンクのURL
     private String selfLink;
     // APIのデータ取得後処理を行うためのHandler
@@ -95,6 +99,7 @@ public class DetailFragment extends Fragment {
         descriptText = getView().findViewById(R.id.DetailDescription);
         pageText = getView().findViewById(R.id.DetailPageText);
         publishDateText = getView().findViewById(R.id.DetailPublishDateText);
+        detailImage = getView().findViewById(R.id.DetailImage);
 
         // OkHttp通信クライアントをインスタンス化
         okHttpClient = new OkHttpClient();
@@ -164,6 +169,13 @@ public class DetailFragment extends Fragment {
             // 発売日が取得できていたら反映
             if (!TextUtils.isEmpty(detailData.volumeInfo.publishedDate)) {
                 publishDateText.setText(detailData.volumeInfo.publishedDate);
+            }
+            // Glideを使ってWeb上の画像をImageViewに表示させる
+            if (detailData.volumeInfo.imageLinks != null) {
+                Glide.with(DetailFragment.this)
+                        .applyDefaultRequestOptions(RequestOptions.fitCenterTransform())
+                        .load(detailData.volumeInfo.imageLinks.medium)
+                        .into(detailImage);
             }
         }
     }
