@@ -45,6 +45,8 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
     private Handler handler;
     // MainActivityから渡されたデータを保持する
     private String term;
+    // 検索結果一覧データ
+    private List<ResultListModel> resultList;
 
     // スタティックコンストラクタ
     public static ResultListFragment getInstance(String term) {
@@ -139,7 +141,7 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
                 , (i + 1) + "行目をクリックしました"
                 , Toast.LENGTH_SHORT).show();
         // 蔵書詳細画面用Fragmentをインスタンス化
-        DetailFragment detailFragment = new DetailFragment();
+        DetailFragment detailFragment = DetailFragment.getInstance(resultList.get(i).selfLink);
         // support.v4.app.Fragment内ではgetFragmentManager = Activity.getSupportFragmentManager
         FragmentManager fm = getFragmentManager();
         // 別のFragmentに遷移するためのクラスをインスタンス化
@@ -154,16 +156,11 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
 
     // 検索結果をListViewに反映するメインスレッドの処理クラス
     private class ReflectResult implements Runnable {
-        // 蔵書一覧タイトルデータリスト
-        private List<String> titleList;
-        // 蔵書一覧概要データリスト
-        private List<String> summaryList;
 
         // コンストラクタ
         public ReflectResult(JSONArray items) {
             // リストデータを初期化
-            titleList = new ArrayList<>();
-            summaryList = new ArrayList<>();
+            resultList = new ArrayList<>();
             // Jsonのパースエラーが発生した時に備えてtry~catchする
             try{
                 // 蔵書リストの件数分繰り返しタイトルをログ出力する
@@ -172,10 +169,22 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
                     JSONObject item = items.getJSONObject(i);
                     // 蔵書のi番目データから蔵書情報のグループを取得
                     JSONObject volumeInfo = item.getJSONObject("volumeInfo");
-                    // タイトルデータをリストに追加
-                    titleList.add(volumeInfo.getString("title"));
-                    // 概要データをリストに追加
-                    summaryList.add(volumeInfo.getString("description"));
+                    // 蔵書データクラスをインスタンス化
+                    ResultListModel resultData = new ResultListModel();
+                    // タイトルをモデルクラスに代入
+                    resultData.title = volumeInfo.getString("title");
+                    // 個体蔵書データURLをモデルクラスに代入
+                    resultData.selfLink = item.getString("selfLink");
+                    // データに"description"キーが含まれている場合は情報を代入
+                    if (volumeInfo.has("description")) {
+                        // 概要をモデルクラスに代入
+                        resultData.summary = volumeInfo.getString("description");
+                    } else {
+                        // "description"キーが含まれていない場合は空文字データを代入
+                        resultData.summary = "";
+                    }
+                    // 蔵書情報をリストに登録
+                    resultList.add(resultData);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -186,7 +195,7 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
         @Override
         public void run() {
             // ListViewに表示する情報をまとめるAdapterをインスタンス化
-            adapter = new ResultListAdapter(getContext(), titleList, summaryList);
+            adapter = new ResultListAdapter(getContext(), resultList);
             // ListViewに表示情報をまとめたAdapterをセット
             resultListView.setAdapter(adapter);
             // ListViewに行をクリックした時のイベントを登録

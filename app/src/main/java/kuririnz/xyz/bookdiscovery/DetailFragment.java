@@ -30,7 +30,7 @@ public class DetailFragment extends Fragment {
 
     // 定数
     // データ渡しのキー情報
-    private final static String BUNDLE_KEY = "BUNDLE_ISBN";
+    private final static String BUNDLE_KEY = "BUNDLE_SELFLINK";
 
     // xmlファイルのコンポーネントと関連付ける要素
     private TextView titleText;
@@ -39,21 +39,21 @@ public class DetailFragment extends Fragment {
     private TextView descriptText;
     private TextView pageText;
     private TextView publishDateText;
-    // APIの検索に使うISBNコード
-    private String isbn;
+    // 個体リンクのURL
+    private String selfLink;
     // APIのデータ取得後処理を行うためのHandler
     private Handler handler;
     // OkHttp通信クライアント
     private OkHttpClient okHttpClient;
 
     // スタティックコンストラクタ
-    public static DetailFragment getInstance(String isbn) {
+    public static DetailFragment getInstance(String selfLink) {
         // DetailFragmentインスタンスを生成
         DetailFragment fragment = new DetailFragment();
         // DetailFragmentに渡すデータ格納クラスを生成
         Bundle args = new Bundle();
         // 検索文字列データを連携データにセット
-        args.putString(BUNDLE_KEY, isbn);
+        args.putString(BUNDLE_KEY, selfLink);
         // データ格納クラスをDetailFragmentインスタンスにセット
         fragment.setArguments(args);
         // 生成したResultListFragmentを返却
@@ -79,12 +79,12 @@ public class DetailFragment extends Fragment {
         handler = new Handler();
         // 連携データが存在するか確認
         if (getArguments() != null) {
-            // 連携データ内から"term"キーのデータを代入、なければ"Android"と文字列を代入
-            isbn = getArguments().getString(BUNDLE_KEY, "");
+            // 連携データ内から"BUNDLE_SELFLINK"キーのデータを代入、なければ"Android"と文字列を代入
+            selfLink = getArguments().getString(BUNDLE_KEY, "");
         }
 
-        // isbnが空の場合は検索結果一覧画面に強制バック
-        if (TextUtils.isEmpty(isbn)) {
+        // selfLinkが空の場合は検索結果一覧画面に強制バック
+        if (TextUtils.isEmpty(selfLink)) {
             getFragmentManager().popBackStack();
         }
 
@@ -99,8 +99,8 @@ public class DetailFragment extends Fragment {
         // OkHttp通信クライアントをインスタンス化
         okHttpClient = new OkHttpClient();
         // 通信するための情報
-        // ResultListFragmentから取得したISBNを検索条件に設定
-        Request request = new Request.Builder().url("https://www.googleapis.com/books/v1/volumes?q=isbn" +  isbn).build();
+        // ResultListFragmentから取得したselfLinkURLにREST API通信を行う
+        Request request = new Request.Builder().url(selfLink).build();
         // データの取得後の命令を実装
         Callback callBack = new Callback() {
             @Override
@@ -111,13 +111,60 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                // JsonパースライブラリGsonのインスタンス化
                 Gson gson = new Gson();
-
-                DetailDataModel detailData = gson.fromJson(response.body().string(), DetailDataModel.class);
-                Log.d("DetailFragment parse", detailData.items.get(0).volumeInfo.title);
+                // 返却されたJson文字列を一旦変数に代入
+                String jsonString = response.body().string();
+                // DetailDataModelクラスに代入
+                DetailDataModel detailData = gson.fromJson(jsonString, DetailDataModel.class);
+                // パースが正常に行えたかLogcatに出力して確認。
+                Log.d("DetailFragment parse", detailData.volumeInfo.title);
+                // MainThreadに処理を渡し画面にデータを反映する
+                handler.post(new ReflectDetail(detailData));
             }
         };
-        // 非同期処理でAPI通信を実行
+        // 非同期処理でREST API通信を実行
         okHttpClient.newCall(request).enqueue(callBack);
+    }
+
+    // REST APIで取得したデータを画面に反映するためのクラス
+    private class ReflectDetail implements Runnable {
+        // 蔵書詳細データ
+        DetailDataModel detailData;
+
+        // コンストラクタ
+        public ReflectDetail(DetailDataModel detailData) {
+            this.detailData = detailData;
+        }
+
+        // Handlerから実行されるメソッド
+        @Override
+        public void run() {
+            // タイトルを反映
+            titleText.setText(detailData.volumeInfo.title);
+            // サブタイトルが取得できていたら反映
+            if (!TextUtils.isEmpty(detailData.volumeInfo.subTitle)) {
+                subTitleText.setText(detailData.volumeInfo.subTitle);
+            }
+            // 概要が取得できていたら反映
+            if (!TextUtils.isEmpty(detailData.volumeInfo.description)) {
+                descriptText.setText(detailData.volumeInfo.description);
+            }
+            // 著作者名が取得できていたら反映
+            if (detailData.volumeInfo.authors != null && detailData.volumeInfo.authors.size() > 0) {
+                String authorString = new String();
+                // 著作者名が複数設定されていう場合があるので繰り返し処理で全て表示する
+                for (String author : detailData.volumeInfo.authors) {
+                    authorString += author + ",";
+                }
+                authorText.setText(authorString);
+            }
+            // ページ数を反映
+            pageText.setText(String.valueOf(detailData.volumeInfo.pageCount));
+            // 発売日が取得できていたら反映
+            if (!TextUtils.isEmpty(detailData.volumeInfo.publishedDate)) {
+                publishDateText.setText(detailData.volumeInfo.publishedDate);
+            }
+        }
     }
 }
