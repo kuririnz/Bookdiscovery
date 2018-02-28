@@ -90,6 +90,8 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
             term = getArguments().getString("term", "Android");
         }
 
+        // プログレスFragmentをインスタンス化
+        ProgressDialogFragment progressDialog = new ProgressDialogFragment();
         // xmlファイルのコンポーネントと関連付け
         resultListView =  getView().findViewById(R.id.FragmentResultListView);
         // OkHttp通信クライアントをインスタンス化
@@ -128,6 +130,8 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
                 }
             }
         };
+        // REST API通信中のダイアログを表示
+        progressDialog.show(getChildFragmentManager(), "Dialog");
         // 非同期処理でAPI通信を実行
         okHttpClient.newCall(request).enqueue(callBack);
 
@@ -194,6 +198,20 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
         // Handlerから実行されるメソッド
         @Override
         public void run() {
+            // プログレスFragmentを終了させるためにマネージャークラスを取得
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            // FragmentManagerに登録されたFragmentからダイアログフラグメントを抽出
+            ProgressDialogFragment progressDialog = (ProgressDialogFragment) getChildFragmentManager().findFragmentByTag("Dialog");
+            // DialogFragmentを取得できた場合
+            if (progressDialog != null) {
+                // ダイアログを非表示にする
+                progressDialog.dismiss();
+                // FragmentManagerの管理から除外
+                ft.remove(progressDialog);
+            }
+            // FragmentManagerへの変更を反映(確定)
+            ft.commit();
+
             // ListViewに表示する情報をまとめるAdapterをインスタンス化
             adapter = new ResultListAdapter(getContext(), resultList);
             // ListViewに表示情報をまとめたAdapterをセット
