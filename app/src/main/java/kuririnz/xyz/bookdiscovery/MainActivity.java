@@ -1,6 +1,8 @@
 package kuririnz.xyz.bookdiscovery;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,9 @@ import java.util.TimerTask;
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
+
+    // 最後の検索文言を保持/取得するキー定数
+    private final static String PREF_KEY = "LAST_TERM";
 
     // レイアウトxmlと関連付けるWidget
     private Button bookSearchBtn;
@@ -73,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
                     realm.close();
                 }
 
+                // SharedPreferenceに保存
+                SharedPreferences.Editor editor = MainActivity.this.getPreferences(Context.MODE_PRIVATE).edit();
+                editor.putString(PREF_KEY, termString).apply();
+
                 // 検索結果画面へ遷移するためのIntentをインスタンス化
                 Intent intent = new Intent(MainActivity.this, ResultListActivity.class);
                 // EditTextに入力された文字列を"KeyValuePair"でResultListActivityに渡す
@@ -94,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // SharedPreferenceに最後の検索条件が残っていたら登録する
+        // SharedPreferenceにデータがない場合は空文字を設定する
+        String lastTerm = this.getPreferences(Context.MODE_PRIVATE).getString(PREF_KEY, "");
+        bookSearchEditor.setText(lastTerm);
 
         // 準備されているTimerスレッドをインスタンス化
         timer = new Timer();
