@@ -198,6 +198,10 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
         // Handlerから実行されるメソッド
         @Override
         public void run() {
+            // Activityが終了していたら処理をしない
+            if (getActivity() == null || getActivity().isFinishing() || !getActivity().hasWindowFocus()) {
+                return;
+            }
             // プログレスFragmentを終了させるためにマネージャークラスを取得
             FragmentTransaction ft = getChildFragmentManager().beginTransaction();
             // FragmentManagerに登録されたFragmentからダイアログフラグメントを抽出

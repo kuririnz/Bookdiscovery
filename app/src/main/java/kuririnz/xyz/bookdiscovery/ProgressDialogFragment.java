@@ -1,12 +1,14 @@
 package kuririnz.xyz.bookdiscovery;
 
 
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.ViewGroup;
 
 
 /**
@@ -19,13 +21,23 @@ public class ProgressDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // ダイアログ表示するレイアウトを生成
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_progress_dialog, null, false);
 
-        getDialog().setCancelable(false);
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_progress_dialog, container, false);
+        // アラートダイアログビルダーを使ってボタン付きのダイアログを生成
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setView(view)
+                .setPositiveButton("キャンセル", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getActivity().finish();
+                    }
+                })
+                .setCancelable(false);
+        // 表示するダイアログを生成して返却
+        return builder.create();
     }
 }
