@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+
+import kuririnz.xyz.bookdiscovery.Model.ResultListModel;
+import kuririnz.xyz.bookdiscovery.R;
 
 /**
  * Created by keisukekuribayashi on 2018/01/30.

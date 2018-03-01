@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Fragment;
 
 
 import android.os.Bundle;
@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import kuririnz.xyz.bookdiscovery.Model.DetailDataModel;
+import kuririnz.xyz.bookdiscovery.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

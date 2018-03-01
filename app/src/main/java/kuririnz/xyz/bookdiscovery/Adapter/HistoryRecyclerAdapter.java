@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.realm.RealmResults;
+import kuririnz.xyz.bookdiscovery.Model.SearchHistoryModel;
+import kuririnz.xyz.bookdiscovery.R;
 
 /**
  * Search History Data List(RecyclerView)

@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Fragment;
 
 
 import android.os.Bundle;
@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import kuririnz.xyz.bookdiscovery.Model.ResultListModel;
+import kuririnz.xyz.bookdiscovery.R;
+import kuririnz.xyz.bookdiscovery.Adapter.ResultListAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

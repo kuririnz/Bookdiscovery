@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import kuririnz.xyz.bookdiscovery.Adapter.HistoryRecyclerAdapter;
+import kuririnz.xyz.bookdiscovery.R;
+import kuririnz.xyz.bookdiscovery.Model.SearchHistoryModel;
 
 public class HistoryActivity extends AppCompatActivity {
 

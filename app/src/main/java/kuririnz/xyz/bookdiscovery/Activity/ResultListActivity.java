@@ -1,9 +1,12 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import kuririnz.xyz.bookdiscovery.Fragment.ResultListFragment;
+import kuririnz.xyz.bookdiscovery.R;
 
 public class ResultListActivity extends AppCompatActivity {
 

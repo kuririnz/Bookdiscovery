@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.realm.Realm;
+import kuririnz.xyz.bookdiscovery.Model.SearchHistoryModel;
+import kuririnz.xyz.bookdiscovery.R;
 
 public class MainActivity extends AppCompatActivity {
 

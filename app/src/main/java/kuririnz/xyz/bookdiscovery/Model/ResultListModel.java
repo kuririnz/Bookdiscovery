@@ -1,4 +1,4 @@
-package kuririnz.xyz.bookdiscovery;
+package kuririnz.xyz.bookdiscovery.Model;
 
 /**
  * 検索結果一覧表示用モデルクラス
