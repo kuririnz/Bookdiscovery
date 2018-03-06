@@ -33,7 +33,7 @@ import okhttp3.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
     // 定数
     // データ渡しのキー情報
@@ -110,21 +110,7 @@ public class DetailFragment extends Fragment {
         transWebviewBtn = getView().findViewById(R.id.TransitionWebView);
 
         // WebViewFragmentへの遷移処理を実装
-        transWebviewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // BTWebViewFragmentをインスタンス化
-                BTWebViewFragment fragment = BTWebViewFragment.getInstance(infoLink);
-                // 別のFragmentに遷移するためのクラスをインスタンス化
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                // 現在、DetailFragmentを表示しているR.id.FragmentContainerをBTWebViewFragmentに置き換え
-                ft.replace(R.id.FragmentContainer, fragment);
-                // 表示していたFragmentをバックスタックに追加
-                ft.addToBackStack(null);
-                // 変更を反映
-                ft.commit();
-            }
-        });
+        transWebviewBtn.setOnClickListener(this);
 
         // OkHttp通信クライアントをインスタンス化
         okHttpClient = new OkHttpClient();
@@ -157,6 +143,25 @@ public class DetailFragment extends Fragment {
         };
         // 非同期処理でREST API通信を実行
         okHttpClient.newCall(request).enqueue(callBack);
+    }
+
+    // ボタンクリック時のイベントを実装
+    @Override
+    public void onClick(View view) {
+        // クリックされたボタンをIDで判定
+        if (view.getId() == R.id.TransitionWebView) {
+            // "WebViewで確認"ボタンをクリックした場合
+            // BTWebViewFragmentをインスタンス化
+            BTWebViewFragment fragment = BTWebViewFragment.getInstance(infoLink);
+            // 別のFragmentに遷移するためのクラスをインスタンス化
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            // 現在、DetailFragmentを表示しているR.id.FragmentContainerをBTWebViewFragmentに置き換え
+            ft.replace(R.id.FragmentContainer, fragment);
+            // 表示していたFragmentをバックスタックに追加
+            ft.addToBackStack(null);
+            // 変更を反映
+            ft.commit();
+        }
     }
 
     // REST APIで取得したデータを画面に反映するためのクラス
