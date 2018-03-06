@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 // EditTextの文字列を取得
                 String termString = bookSearchEditor.getText().toString();
                 // Timerスレッドを止める
-                timer.cancel();
+//                timer.cancel();
                 // Realmインスタンスを生成
                 Realm realm = Realm.getDefaultInstance();
                 try {
@@ -112,28 +112,28 @@ public class MainActivity extends AppCompatActivity {
         bookSearchEditor.setText(lastTerm);
 
         // 準備されているTimerスレッドをインスタンス化
-        timer = new Timer();
-        // ３秒ごとに実行するタスク(TimerTask)をインスタンス化
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                // コンソールログに更新された内容を出力
-                Log.d("SubThread Process"
-                        , "「" +  bookSearchEditor.getText().toString() + "」に更新されました。");
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 更新された内容をトーストに表示
-                        Toast.makeText(getBaseContext()
-                                , "「" +  bookSearchEditor.getText().toString() + "」に更新されました。"
-                                , Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        };
-
-        // Timerスレッドの実行スケジュールを設定
-        // 3秒毎にtimerTaskのプログラムを実行
-        timer.schedule(timerTask, 3000, 3000);
+//        timer = new Timer();
+//        // ３秒ごとに実行するタスク(TimerTask)をインスタンス化
+//        TimerTask timerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                // コンソールログに更新された内容を出力
+//                Log.d("SubThread Process"
+//                        , "「" +  bookSearchEditor.getText().toString() + "」に更新されました。");
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // 更新された内容をトーストに表示
+//                        Toast.makeText(getBaseContext()
+//                                , "「" +  bookSearchEditor.getText().toString() + "」に更新されました。"
+//                                , Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        };
+//
+//        // Timerスレッドの実行スケジュールを設定
+//        // 3秒毎にtimerTaskのプログラムを実行
+//        timer.schedule(timerTask, 3000, 3000);
     }
 }

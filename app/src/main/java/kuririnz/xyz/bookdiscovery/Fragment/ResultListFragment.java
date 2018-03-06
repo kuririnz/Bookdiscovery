@@ -202,7 +202,7 @@ public class ResultListFragment extends Fragment implements AdapterView.OnItemCl
         @Override
         public void run() {
             // Activityが終了していたら処理をしない
-            if (getActivity() == null || getActivity().isFinishing() || !getActivity().hasWindowFocus()) {
+            if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
                 return;
             }
             // プログレスFragmentを終了させるためにマネージャークラスを取得
