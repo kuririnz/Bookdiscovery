@@ -46,6 +46,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="WebViewで確認"/>
+            <Button
+                android:id="@+id/TransitionBrowser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ブラウザアプリで確認"/>
         </LinearLayout>
     </LinearLayout>
     <TextView

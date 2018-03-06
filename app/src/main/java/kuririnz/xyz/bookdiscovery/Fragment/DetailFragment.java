@@ -1,6 +1,8 @@
 package kuririnz.xyz.bookdiscovery.Fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -48,6 +50,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private TextView publishDateText;
     private ImageView detailImage;
     private Button transWebviewBtn;
+    private Button transitionBrowserBtn;
     // Play Store リンクURL
     private String infoLink;
     // 個体リンクのURL
@@ -108,7 +111,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         publishDateText = getView().findViewById(R.id.DetailPublishDateText);
         detailImage = getView().findViewById(R.id.DetailImage);
         transWebviewBtn = getView().findViewById(R.id.TransitionWebView);
+        transitionBrowserBtn = getView().findViewById(R.id.TransitionBrowser);
 
+        // クリック時にブラウザアプリでURLを表示する処理を実装
+        transitionBrowserBtn.setOnClickListener(this);
         // WebViewFragmentへの遷移処理を実装
         transWebviewBtn.setOnClickListener(this);
 
@@ -161,6 +167,14 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             ft.addToBackStack(null);
             // 変更を反映
             ft.commit();
+        } else if (view.getId() == R.id.TransitionBrowser) {
+            // "ブラウザアプリで確認"ボタンをクリックした場合
+            // ブラウザアプリで表示するURLをUriクラスにキャスト
+            Uri uri = Uri.parse(infoLink);
+            // ブラウザアプリで開くためのIntentをインスタンス化
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            // ブラウザアプリで指定URLを表示する
+            startActivity(intent);
         }
     }
 
