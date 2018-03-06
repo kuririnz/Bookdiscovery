@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -51,6 +52,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private ImageView detailImage;
     private Button transWebviewBtn;
     private Button transitionBrowserBtn;
+    private Button transCustomTabsBtn;
     // Play Store リンクURL
     private String infoLink;
     // 個体リンクのURL
@@ -112,7 +114,10 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         detailImage = getView().findViewById(R.id.DetailImage);
         transWebviewBtn = getView().findViewById(R.id.TransitionWebView);
         transitionBrowserBtn = getView().findViewById(R.id.TransitionBrowser);
+        transCustomTabsBtn = getView().findViewById(R.id.TransitionCustomTabs);
 
+        // クリック時にChrome Custom TabsでURLを表示する処理を実装
+        transCustomTabsBtn.setOnClickListener(this);
         // クリック時にブラウザアプリでURLを表示する処理を実装
         transitionBrowserBtn.setOnClickListener(this);
         // WebViewFragmentへの遷移処理を実装
@@ -175,6 +180,17 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             // ブラウザアプリで指定URLを表示する
             startActivity(intent);
+        } else if (view.getId() == R.id.TransitionCustomTabs) {
+            // "ChromeCustomTabsで確認"ボタンをクリックした場合
+            // ブラウザアプリで表示するURLをUriクラスにキャスト
+            Uri uri = Uri.parse(infoLink);
+            // Chrome Custom Tabsをインスタンス化
+            CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .
+                    .build();
+            // Custom Tabsを表示
+            tabsIntent.launchUrl(getActivity(), uri);
         }
     }
 
