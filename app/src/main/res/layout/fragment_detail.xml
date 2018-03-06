@@ -41,6 +41,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 tools:text="蔵書作者名"/>
+            <Button
+                android:id="@+id/TransitionWebView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WebViewで確認"/>
         </LinearLayout>
     </LinearLayout>
     <TextView

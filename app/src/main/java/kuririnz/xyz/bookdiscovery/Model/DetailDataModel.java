@@ -29,6 +29,10 @@ public class DetailDataModel {
         public int pageCount;
         // 蔵書サムネイル画像URL
         public ImageLinks imageLinks;
+        // Google BooksへのリンクURL
+        public String previewLink;
+        // Play StoreへのリンクURL
+        public String infoLink;
     }
 
     // 蔵書サムネイルクラス

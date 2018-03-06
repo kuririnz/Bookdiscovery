@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BookSearchBtn", "onClick: BookSearch Button");
                 // EditTextの文字列を取得
                 String termString = bookSearchEditor.getText().toString();
+                /* 起動画面のToastはうっとおしいので一旦コメントアウト */
                 // Timerスレッドを止める
 //                timer.cancel();
                 // Realmインスタンスを生成
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         String lastTerm = this.getPreferences(Context.MODE_PRIVATE).getString(PREF_KEY, "");
         bookSearchEditor.setText(lastTerm);
 
+        /* 起動画面のToastはうっとおしいので一旦コメントアウト */
         // 準備されているTimerスレッドをインスタンス化
 //        timer = new Timer();
 //        // ３秒ごとに実行するタスク(TimerTask)をインスタンス化

@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +47,9 @@ public class DetailFragment extends Fragment {
     private TextView pageText;
     private TextView publishDateText;
     private ImageView detailImage;
+    private Button transWebviewBtn;
+    // Play Store リンクURL
+    private String infoLink;
     // 個体リンクのURL
     private String selfLink;
     // APIのデータ取得後処理を行うためのHandler
@@ -102,6 +107,24 @@ public class DetailFragment extends Fragment {
         pageText = getView().findViewById(R.id.DetailPageText);
         publishDateText = getView().findViewById(R.id.DetailPublishDateText);
         detailImage = getView().findViewById(R.id.DetailImage);
+        transWebviewBtn = getView().findViewById(R.id.TransitionWebView);
+
+        // WebViewFragmentへの遷移処理を実装
+        transWebviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // BTWebViewFragmentをインスタンス化
+                BTWebViewFragment fragment = BTWebViewFragment.getInstance(infoLink);
+                // 別のFragmentに遷移するためのクラスをインスタンス化
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                // 現在、DetailFragmentを表示しているR.id.FragmentContainerをBTWebViewFragmentに置き換え
+                ft.replace(R.id.FragmentContainer, fragment);
+                // 表示していたFragmentをバックスタックに追加
+                ft.addToBackStack(null);
+                // 変更を反映
+                ft.commit();
+            }
+        });
 
         // OkHttp通信クライアントをインスタンス化
         okHttpClient = new OkHttpClient();
@@ -124,6 +147,8 @@ public class DetailFragment extends Fragment {
                 String jsonString = response.body().string();
                 // DetailDataModelクラスに代入
                 DetailDataModel detailData = gson.fromJson(jsonString, DetailDataModel.class);
+                // Play Store へのリンクを代入
+                infoLink = detailData.volumeInfo.infoLink;
                 // パースが正常に行えたかLogcatに出力して確認。
                 Log.d("DetailFragment parse", detailData.volumeInfo.title);
                 // MainThreadに処理を渡し画面にデータを反映する
