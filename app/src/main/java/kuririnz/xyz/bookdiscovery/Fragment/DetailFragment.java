@@ -187,7 +187,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             // Chrome Custom Tabsをインスタンス化
             CustomTabsIntent tabsIntent = new CustomTabsIntent.Builder()
                     .setShowTitle(true)
-                    .
                     .build();
             // Custom Tabsを表示
             tabsIntent.launchUrl(getActivity(), uri);
